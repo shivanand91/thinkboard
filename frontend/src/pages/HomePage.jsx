@@ -13,7 +13,11 @@ const HomePage = () => {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/notes")
+        const res = await axios.get("http://localhost:5001/api/notes")
+        if (!res.data || res.data.length === 0) {
+          toast.error("Please create a note.");
+          return;
+        }
         console.log(res.data);
         setNotes(res.data);
         setIsRateLimited(false)
@@ -43,7 +47,7 @@ const HomePage = () => {
         {notes.length > 0 && !isRateLimited && (
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
             {notes.map((note) => (
-              <NoteCard key={note._id} note={note} />
+              <NoteCard key={note._id} note={note} setNotes={setNotes}/>
              ))}
           </div>
         )}
